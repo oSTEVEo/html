@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <!--<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet"> -->
+</head>
+
+<body>
+    <div id="temps">
+        <div id="temp_monitor">
+            <div class="monitor" id="temp0">Температура 1: -0 C&#176;</div>
+            <div class="monitor" id="temp1">Температура 2: -0 C&#176;</div>
+            <div class="monitor" id="temp2">Температура 3: -0 C&#176;</div>
+            <div class="monitor" id="temp3">Температура 4: -0 C&#176;</div>
+        </div>
+
+        <div class="sets" name="set_temp">
+            <select id="temps_form">
+            <option>1 Термодатчик</option>
+            <option>2 Термодатчик</option>
+            <option>3 Термодатчик</option>
+            <option>4 Термодатчик</option>
+        </select>
+            <input type="text" name="set temperature" id="set_temp" placeholder="Введите температуру">
+            <input type="button" value="Установить">
+        </div>
+    </div>
+
+    <div id="fqs">
+        <div id="fq_monitor">
+            <div class="monitor" id="fq0">Мотор 1: -0 HZ</div>
+            <div class="monitor" id="fq1">Мотор 2: -0 HZ</div>
+        </div>
+
+        <div class="sets" name="set_fq">
+            <select id="fq_form">
+            <option>1 Мотор</option>
+            <option>2 Мотор</option>
+        </select>
+            <input type="text" name="set fq" id="set_fq" placeholder="Введите частоту">
+            <input type="button" value="Установить">
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
