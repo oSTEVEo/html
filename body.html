@@ -45,6 +45,66 @@
             <input type="button" value="Установить">
         </div>
     </div>
+
+    <div id="pids">
+        <table id="pid_monitor" cellpadding="5px">
+            <tr>
+                <td></td>
+                <td>kp</td>
+                <td>ki</td>
+                <td>kd</td>
+            </tr>
+
+            <tr>
+                <td>Станок 1</td>
+                <td id="pid0_kp">-1</td>
+                <td id="pid0_ki">-1</td>
+                <td id="pid0_kd">-1</td>
+            </tr>
+
+            <tr>
+                <td>Станок 2</td>
+                <td id="pid1_kp">-1</td>
+                <td id="pid1_ki">-1</td>
+                <td id="pid1_kd">-1</td>
+            </tr>
+
+            <tr>
+                <td>Станок 3</td>
+                <td id="pid2_kp">-1</td>
+                <td id="pid2_ki">-1</td>
+                <td id="pid2_kd">-1</td>
+            </tr>
+
+            <tr>
+                <td>Станок 4</td>
+                <td id="pid3_kp">-1</td>
+                <td id="pid3_ki">-1</td>
+                <td id="pid3_kd">-1</td>
+            </tr>
+
+
+        </table>
+
+        <div class="sets" name="set_pid">
+            <select id="temps_for_pid">
+            <option>1 Станок</option>
+            <option>2 Станок</option>
+            <option>3 Станок</option>
+            <option>4 Станок</option>
+        </select>
+
+            <select id="pid_form">
+            <option>kp</option>
+            <option>ki</option>
+            <option>kd</option>
+        </select>
+            <input type="text" name="set pid" id="set_pid" placeholder="Введите значение">
+            <input type="button" value="Установить">
+        </div>
+    </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 
