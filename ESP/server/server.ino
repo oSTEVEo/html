@@ -1,6 +1,5 @@
 /* Create a WiFi access point and provide a web server on it. */
 #include <PID_v1.h>
-#include "max6675.h"
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -33,6 +32,32 @@ ESP8266WebServer server(80);
 /* Just a little test message.  Go to http://192.168.4.1 in a web browser
    connected to this access point to see it.
 */
+
+//PID
+#include <PID_v1.h>
+
+#define RELAY_PIN 12
+
+#include "max6675.h"
+
+int thermoDO = 14;
+int thermoCS = 5;
+int thermoCLK = 16;
+
+MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
+
+double Setpoint, Input, Output;
+
+double Kp[4] = {2, 2, 2, 2}, Ki[4] = {5, 5, 5, 5}, Kd[4] = {1, 1, 1, 1};
+
+PID myPID1(&Input, &Output, &Setpoint, Kp[0], Ki[0], Kd[0], DIRECT);
+PID myPID2(&Input, &Output, &Setpoint, Kp[1], Ki[1], Kd[1], DIRECT);
+PID myPID3(&Input, &Output, &Setpoint, Kp[2], Ki[2], Kd[2], DIRECT);
+PID myPID4(&Input, &Output, &Setpoint, Kp[3], Ki[3], Kd[3], DIRECT);
+
+int WindowSize = 5000;
+unsigned long windowStartTime;
+//ENDPID
 
 void handleRoot() {
   server.send(200, "text/html", "<h1>You are connected</h1>");
@@ -97,7 +122,6 @@ void set_fq() {
 
   int cs = 0;
   for (uint8_t i = 0; i < server.args(); i++) {
-
     if (server.argName(i) == "chenl") {
       chenl = server.arg(i).toInt();
       cs += 1;
@@ -127,12 +151,55 @@ void set_fq() {
     server.send(400, "text/plain", "Bad Request");
 }
 
+void set_PID() {
+  double kp_;
+  double ki_;
+  double kd_;
+  int chenl;
+  String key;
+
+  int cs = 0;
+  for (uint8_t i = 0; i < server.args(); i++) {
+
+    if (server.argName(i) == "chenl") {
+      chenl = server.arg(i).toInt();
+      cs += 1;
+    }
+    else if (server.argName(i) == "kp") {
+      kp_ = server.arg(i).toInt();
+      cs += 2;
+    }
+    else if (server.argName(i) == "ki") {
+      ki_ = server.arg(i).toInt();
+      cs += 4;
+    }
+    else if (server.argName(i) == "kd") {
+      kd_ = server.arg(i).toInt();
+      cs += 8;
+    }
+    else if (server.argName(i) == "key") {
+      key = server.arg(i);
+      cs += 16;
+    }
+  }
+
+  if ((cs == 31) && isKeyValid(key)) {
+    server.send(200, "text/plain", "ok");
+      Kp[chenl] = kp_;
+      Ki[chenl] = ki_;
+      Kd[chenl] = kd_;
+      Serial.println("PID touch");
+  }
+  else
+    server.send(400, "text/plain", "Bad Request");
+}
+
 void get_temp() {
-  String msg = "{\n";
+  String msg = "{";
   for (int i = 0; i < 4; i++) {
-    msg += "  t" + String(i) + " : " + String(chenls[i].Input);
+    msg += "\"t" + String(i) + "\":\"" + String(chenls[i].Input) + "\"";
     if (i < 3) {
-      msg += ",\n";
+      msg += ",";
     }
   }
   msg += "};";
@@ -141,13 +208,27 @@ void get_temp() {
 
 void get_fq() {
   String msg = "{";
-  for (int i = 0; i < 4; i++) {
-    msg += " machine" + String(i) + ": {";
-    msg += " fq1 : " + String(99) + " , " + "fq2 : " + String(99);
-    msg += "};";
-    if (i < 3) {
-      msg += " ";
-    }
+  for (int i = 0; i < 2; i++) {
+    msg += "\"machine" + String(i) + "\"" + ": {";
+    msg += "\"fq1\" : \"" + String(fq1) + "\",\"" + "fq2\"" + ":" + "\"" + String(fq2) + "\"";
+    if (i < 3) 
+      msg += "}, ";
+    else
+      msg += "} ";
+  }
+  msg += "}";
+  server.send(200, "text/json", msg);
+}
+
+void get_PID(){
+  String msg = "{";
+  for (int i = 0; i < 4; i++){
+    msg += "\"PID" + String(i) + "\":{";
+    msg += "\"Kp\":\"" + String(Kp[i]) + "\"," + "\"Ki\":\"" + String(Ki[i]) + "\",\"Kd\":\"" + String(Kd[i]);
+    if(i < 3)
+      msg += "\"},";  
+    else
+      msg += "\"}";
   }
   msg += "};";
   server.send(200, "text/json", msg);
@@ -167,14 +248,52 @@ void setup() {
   server.on("/", handleRoot);
   server.on("/get_temp", get_temp);
   server.on("/get_fq", get_fq);
+  server.on("/get_PID", get_PID);
   server.on("/set_temp", set_temp);
   server.on("/set_fq", set_fq);
+  server.on("/set_PID", set_PID);
 
   server.onNotFound(handleNotFound);
   server.begin();
   Serial.println("HTTP server started");
+  //PID
+  windowStartTime = millis();
+
+  Setpoint = 40;
+
+  myPID1.SetOutputLimits(0, WindowSize);
+  myPID2.SetOutputLimits(0, WindowSize);
+  myPID3.SetOutputLimits(0, WindowSize);
+  myPID4.SetOutputLimits(0, WindowSize);
+
+  myPID1.SetMode(AUTOMATIC);
+  myPID2.SetMode(AUTOMATIC);
+  myPID3.SetMode(AUTOMATIC);
+  myPID4.SetMode(AUTOMATIC);
+  pinMode(RELAY_PIN, OUTPUT);
+  Serial.begin(115200);
+  Serial.println("PID started, delay...");
+  delay(500);
+  Serial.print("...");
 }
+
+long timer1 = 0;
 
 void loop() {
   server.handleClient();
+
+  if (timer1 + 1000 < millis()) {
+    timer1 = millis();
+
+    Input = thermocouple.readCelsius();
+    Serial.println(Input);
+
+  }
+  myPID1.Compute();
+  myPID2.Compute();
+  myPID3.Compute();
+  myPID4.Compute();
+  if (millis() - windowStartTime > WindowSize)windowStartTime += WindowSize;
+  if (Output < millis() - windowStartTime) digitalWrite(RELAY_PIN, LOW);
+  else digitalWrite(RELAY_PIN, HIGH);
 }
