@@ -202,7 +202,7 @@ void get_temp() {
       msg += ",";
     }
   }
-  msg += "};";
+  msg += "}";
   server.send(200, "text/json", msg);
 }
 
@@ -211,7 +211,7 @@ void get_fq() {
   for (int i = 0; i < 2; i++) {
     msg += "\"machine" + String(i) + "\"" + ": {";
     msg += "\"fq1\" : \"" + String(fq1) + "\",\"" + "fq2\"" + ":" + "\"" + String(fq2) + "\"";
-    if (i < 3) 
+    if (i < 1) 
       msg += "}, ";
     else
       msg += "} ";
@@ -230,7 +230,7 @@ void get_PID(){
     else
       msg += "\"}";
   }
-  msg += "};";
+  msg += "}";
   server.send(200, "text/json", msg);
 }
 
