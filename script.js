@@ -27,10 +27,6 @@ function get_temp() {
   document.getElementById("temp1").innerText = `Температура 2 > ${tmp.t1} C°`;
   document.getElementById("temp2").innerText = `Температура 3 > ${tmp.t2} C°`;
   document.getElementById("temp3").innerText = `Температура 4 > ${tmp.t3} C°`;
-
-  console.log(value);
-  console.log(tmp);
-  console.log(document.getElementsByName("temp3").value);
 }
 
 function get_fq() {
@@ -55,15 +51,16 @@ function get_PID() {
     */
   if (DEBUG)
     value =
-      '{"PID0":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID1":{"Kp":"2.00","Ki":"3.00","Kd":"4.00"},"PID2":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID3":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"}};';
+      '{"PID0":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID1":{"Kp":"2.00","Ki":"3.00","Kd":"4.00"},"PID2":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID3":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"}}';
   else value = httpGet("/get_fq");
 
   var tmp = JSON.parse(value);
+  var r;
 
   for (var i = 0; i < 4; i++) {
-    document.getElementById(`pid${i}_kp`).innerText = `${tmp.PID}`;
-    document.getElementById(`pid${i}_ki`).innerText = `${tmp.f1}`;
-    document.getElementById(`pid${i}_kd`).innerText = `${tmp.f1}`;
+    document.getElementById(`pid${i}_kp`).innerText = `${tmp.PID$i}`;
+    document.getElementById(`pid${i}_ki`).innerText = `${tmp.PID$i}`;
+    document.getElementById(`pid${i}_kd`).innerText = `${tmp.PID$i}`;
   }
 }
 
@@ -119,7 +116,8 @@ function set_PID(chenl, kp_, ki_, kd_) {
 
 get_temp();
 get_fq();
+get_PID();
 
-set_temp(1, 2);
-set_fq(1, 2);
-set_PID(1, 2, 3, 4);
+//set_temp(1, 2);
+//set_fq(1, 2);
+//set_PID(1, 2, 3, 4);
