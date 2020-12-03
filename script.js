@@ -110,13 +110,13 @@ function set_PID(chenl, kp_, ki_, kd_) {
   console.log("Request is: " + request + "\nResult is: " + result);
 }
 
-//setInterval(get_temp, 500);
-//setInterval(get_fq(), 500);
-//setInterval(get_PID();
+setInterval(get_temp, 500);
+setInterval(get_fq(), 500);
+setInterval(get_PID(), 500);
 
-get_temp();
-get_fq();
-get_PID();
+//get_temp();
+//get_fq();
+//get_PID();
 
 //set_temp(1, 2);
 //set_fq(1, 2);
