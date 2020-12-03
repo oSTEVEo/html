@@ -36,8 +36,8 @@ function get_fq() {
 
   var tmp = JSON.parse(value);
 
-  document.getElementById("fq0").innerText = `Мотор 1 > ${tmp.f0} Hz`;
-  document.getElementById("fq1").innerText = `Мотор 2 > ${tmp.f1} Hz`;
+  document.getElementById("fq0").innerText = `Мотор 1 > ${tmp.fq0} Hz`;
+  document.getElementById("fq1").innerText = `Мотор 2 > ${tmp.fq1} Hz`;
 
   //console.log(value);
 }
@@ -52,15 +52,15 @@ function get_PID() {
   if (DEBUG)
     value =
       '{"PID0":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID1":{"Kp":"2.00","Ki":"3.00","Kd":"4.00"},"PID2":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID3":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"}}';
-  else value = httpGet("/get_fq");
+  else value = httpGet("/get_PID");
 
   var tmp = JSON.parse(value);
-  var r;
 
+  var a = Object.values(tmp)
   for (var i = 0; i < 4; i++) {
-    document.getElementById(`pid${i}_kp`).innerText = `${tmp.PID$i}`;
-    document.getElementById(`pid${i}_ki`).innerText = `${tmp.PID$i}`;
-    document.getElementById(`pid${i}_kd`).innerText = `${tmp.PID$i}`;
+    document.getElementById(`pid${i}_kp`).innerText = a[i].Kp;
+    document.getElementById(`pid${i}_ki`).innerText = a[i].Ki;
+    document.getElementById(`pid${i}_kd`).innerText = a[i].Kd;
   }
 }
 
@@ -111,8 +111,8 @@ function set_PID(chenl, kp_, ki_, kd_) {
 }
 
 setInterval(get_temp, 500);
-setInterval(get_fq(), 500);
-setInterval(get_PID(), 500);
+setInterval(get_fq, 500);
+setInterval(get_PID, 500);
 
 //get_temp();
 //get_fq();
