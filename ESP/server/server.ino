@@ -6,42 +6,31 @@
 #include <ESP8266WebServer.h>
 
 //#include "site.h"
-const String data256 = "<!DOCTYPE html><html lang=en><head> <meta charset=UTF-8> <meta name=viewport content=\"width=device-width, initial-scale=1.0\"> <title>Document</title> <style>body{background-color:#969696fd;padding:0;margin:0;width:100%;height:100%;padding:0;margin:0}#teemp{background-color:salmon;margin:10px}.monitor,.pid_monitor{margin:10px;font-size:2.33333rem;color:gray;text-shadow:2px 4px 3px rgba(0,0,0,0.2);font-family:'Oswald',sans-serif}.sets{font-size:2.33333rem;margin-left:20px}#temps,#fqs,#pids{align-self:top-center;padding:15px;padding-top:1px;width:auto;margin:20px;background-color:white;border-radius:20px}</style> </head><body> <div id=temps> <div id=temp_monitor> <div class=monitor id=temp0>Температура 1: -0 C&#176;</div> <div class=monitor id=temp1>Температура 2: -0 C&#176;</div> <div class=monitor id=temp2>Температура 3: -0 C&#176;</div> <div class=monitor id=temp3>Температура 4: -0 C&#176;</div> </div> <div class=sets name=set_temp> <select id=temps_form> <option>1 Термодатчик</option> <option>2 Термодатчик</option> <option>3 Термодатчик</option> <option>4 Термодатчик</option> </select> <input type=text name=\"set temperature\" id=set_temp placeholder=\"Введите температуру\"> <input type=button value=Установить> </div> </div> <div id=fqs> <div id=fq_monitor> <div class=monitor id=fq0>Мотор 1: -0 HZ</div> <div class=monitor id=fq1>Мотор 2: -0 HZ</div> </div> <div class=sets name=set_fq> <select id=fq_form> <option>1 Мотор</option> <option>2 Мотор</option> </select> <input type=text name=\"set fq\" id=set_fq placeholder=\"Введите частоту\"> <input type=button value=Установить> </div> </div> <div id=pids> <table id=pid_monitor cellpadding=5px> <tr> <td></td> <td>kp</td> <td>ki</td> <td>kd</td> </tr> <tr> <td>Нагреватель 1</td> <td id=pid0_kp>-1</td> <td id=pid0_ki>-1</td> <td id=pid0_kd>-1</td> </tr> <tr> <td>Нагреватель 2</td> <td id=pid1_kp>-1</td> <td id=pid1_ki>-1</td> <td id=pid1_kd>-1</td> </tr> <tr> <td>Нагреватель 3</td> <td id=pid2_kp>-1</td> <td id=pid2_ki>-1</td> <td id=pid2_kd>-1</td> </tr> <tr> <td>Нагреватель 4</td> <td id=pid3_kp>-1</td> <td id=pid3_ki>-1</td> <td id=pid3_kd>-1</td> </tr> </table> <div class=sets name=set_pid> <select id=temps_for_pid> <option>1 Нагреватель</option> <option>2 Нагреватель</option> <option>3 Нагреватель</option> <option>4 Нагреватель</option> </select> <select id=pid_form> <option>kp</option> <option>ki</option> <option>kd</option> </select> <input type=text name=\"set pid\" id=set_pid placeholder=\"Введите значение\"> <input type=button value=Установить> </div> </div> </div> <script>var DEBUG=true;var key=0;function httpGet(theUrl){var xmlHttp=new XMLHttpRequest();xmlHttp.open(\"GET\",theUrl,false);</script></body></html>";
+const String data256 = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Document</title><style>body{background-color:#969696fd;padding:0px;margin:0px;width:100%;height:100%;padding:0px;margin:0px}#teemp{background-color:salmon;margin:10px}.monitor,.pid_monitor{margin:10px;font-size:2.33333rem;color:gray;text-shadow:2px 4px 3px rgba(0,0,0,0.2);font-family:'Oswald',sans-serif}.sets{font-size:2.33333rem;margin-left:20px}#temps,#fqs,#pids{align-self:top-center;padding:15px;padding-top:1px;width:auto;margin:20px;background-color:white;border-radius:20px}</style></head><body><div id=\"temps\"><div id=\"temp_monitor\"><div class=\"monitor\" id=\"temp0\">Температура 1: -0 C&#176;</div><div class=\"monitor\" id=\"temp1\">Температура 2: -0 C&#176;</div><div class=\"monitor\" id=\"temp2\">Температура 3: -0 C&#176;</div><div class=\"monitor\" id=\"temp3\">Температура 4: -0 C&#176;</div></div><div class=\"sets\" name=\"set_temp\"> <select id=\"temps_form\"><option>1 Термодатчик</option><option>2 Термодатчик</option><option>3 Термодатчик</option><option>4 Термодатчик</option> </select> <input type=\"text\" name=\"set temperature\" id=\"set_temp\" placeholder=\"Введите температуру\"> <input type=\"button\" value=\"Установить\"></div></div><div id=\"fqs\"><div id=\"fq_monitor\"><div class=\"monitor\" id=\"fq0\">Мотор 1: -0 HZ</div><div class=\"monitor\" id=\"fq1\">Мотор 2: -0 HZ</div></div><div class=\"sets\" name=\"set_fq\"> <select id=\"fq_form\"><option>1 Мотор</option><option>2 Мотор</option> </select> <input type=\"text\" name=\"set fq\" id=\"set_fq\" placeholder=\"Введите частоту\"> <input type=\"button\" value=\"Установить\"></div></div><div id=\"pids\"><table id=\"pid_monitor\" cellpadding=\"5px\"><tr><td></td><td>kp</td><td>ki</td><td>kd</td></tr><tr><td>Нагреватель 1</td><td id=\"pid0_kp\">-1</td><td id=\"pid0_ki\">-1</td><td id=\"pid0_kd\">-1</td></tr><tr><td>Нагреватель 2</td><td id=\"pid1_kp\">-1</td><td id=\"pid1_ki\">-1</td><td id=\"pid1_kd\">-1</td></tr><tr><td>Нагреватель 3</td><td id=\"pid2_kp\">-1</td><td id=\"pid2_ki\">-1</td><td id=\"pid2_kd\">-1</td></tr><tr><td>Нагреватель 4</td><td id=\"pid3_kp\">-1</td><td id=\"pid3_ki\">-1</td><td id=\"pid3_kd\">-1</td></tr></table><div class=\"sets\" name=\"set_pid\"> <select id=\"temps_for_pid\"><option>1 Нагреватель</option><option>2 Нагреватель</option><option>3 Нагреватель</option><option>4 Нагреватель</option> </select><select id=\"pid_form\"><option>kp</option><option>ki</option><option>kd</option> </select> <input type=\"text\" name=\"set pid\" id=\"set_pid\" placeholder=\"Введите значение\"> <input type=\"button\" value=\"Установить\"></div></div></div> <script>var DEBUG=false;var key=0;function httpGet(theUrl){var xmlHttp=new XMLHttpRequest();xmlHttp.open(\"GET\",theUrl,false);xmlHttp.send(null);if(xmlHttp.responseText==\"File Not Found\"){console.log(\"404 on server, error 404\");return\"{}\"}return xmlHttp.responseText}function get_temp(){var value;if(DEBUG){value='{\"t0\":\"0.00\",\"t1\":\"0.00\",\"t2\" :\"0.00\",\"t3\":\"0.00\"}'}else{value=httpGet(\"/get_temp\")}var tmp=JSON.parse(value);document.getElementById(\"temp0\").innerText=`Температура 1>${tmp.t0}C°`;document.getElementById(\"temp1\").innerText=`Температура 2>${tmp.t1}C°`;document.getElementById(\"temp2\").innerText=`Температура 3>${tmp.t2}C°`;document.getElementById(\"temp3\").innerText=`Температура 4>${tmp.t3}C°`}function get_fq(){if(DEBUG){value='{\"f0\":\"0\",\"f1\":\"0\"}'}else{value=httpGet(\"/get_fq\")}var tmp=JSON.parse(value);document.getElementById(\"fq0\").innerText=`Мотор 1>${tmp.fq0}Hz`;document.getElementById(\"fq1\").innerText=`Мотор 2>${tmp.fq1}Hz`;}function get_PID(){if(DEBUG){value='{\"PID0\":{\"Kp\":\"2.00\",\"Ki\":\"5.00\",\"Kd\":\"1.00\"},\"PID1\":{\"Kp\":\"2.00\",\"Ki\":\"3.00\",\"Kd\":\"4.00\"},\"PID2\":{\"Kp\":\"2.00\",\"Ki\":\"5.00\",\"Kd\":\"1.00\"},\"PID3\":{\"Kp\":\"2.00\",\"Ki\":\"5.00\",\"Kd\":\"1.00\"}}'}else{value=httpGet(\"/get_PID\")}var tmp=JSON.parse(value);var a=Object.values(tmp);for(var i=0;i<4;i+=1){document.getElementById(`pid${i}_kp`).innerText=a[i].Kp;document.getElementById(`pid${i}_ki`).innerText=a[i].Ki;document.getElementById(`pid${i}_kd`).innerText=a[i].Kd}}function set_temp(chen_num,value){console.log(\"set temp\");var request=\"/set_temp?chenl=\";request+=chen_num;request+=\"&temp=\";request+=value;request+=\"&key=\";request+=key;var result;var result=httpGet(request);console.log(\"Request is: \"+request+\"nResult is: \"+result)}function set_fq(chen_num,frequency){console.log(\"set fq\");var request=\"/set_fq?chenl=\";request+=chen_num;request+=\"&frequency=\";request+=frequency;request+=\"&key=\";request+=key;var result;var result=httpGet(request);console.log(\"Request is: \"+request+\"nResult is: \"+result)}function set_PID(chenl,kp_,ki_,kd_){console.log(\"set fq\");var request=\"/set_fq?chenl=\";request+=chenl;request+=\"&kp=\";request+=kp_;request+=\"&ki=\";request+=ki_;request+=\"&kd=\";request+=kd_;request+=\"&key=\";request+=key;var result;var result=httpGet(request);console.log(\"Request is: \"+request+\"nResult is: \"+result)}setInterval(get_temp,500);setInterval(get_fq,500);setInterval(get_PID,500);</script> </body></html>";
 
 #ifndef APSSID
 #define APSSID "ESPap1"
 #define APPSK  "qweqweqweasd"
 #endif
 
-/* Set these to your desired credentials. */
-const char *ssid = APSSID;
-const char *password = APPSK;
-
-int fq1 = 0;
-int fq2 = 0;
-
-int temps[4] = {20, 20, 20, 20};
-
-struct Chenl {
-  double Ki, Kp, Kd,
-         Setpoint, Input, Output;
-  int csInp, outPin;
-};
-
-Chenl chenls[4];
-
-ESP8266WebServer server(80);
-
-/* Just a little test message.  Go to http://192.168.4.1 in a web browser
-   connected to this access point to see it.
-*/
-
-//PID
 #include <PID_v1.h>
 
 #define RELAY_PIN 12
 
 #include "max6675.h"
+
+
+/* Set these to your desired credentials. */
+const char *ssid = APSSID;
+const char *password = APPSK;
+
+int fq0 = 0;
+int fq1 = 0;
+
+int temps[4] = {20, 20, 20, 20};
+
+ESP8266WebServer server(80);
+
 
 int thermoDO = 14;
 int thermoCS = 5;
@@ -145,13 +134,13 @@ void set_fq() {
 
   if ((cs == 7) && isKeyValid(key)) {
     server.send(200, "text/plain", "ok");
-    if (chenl == 1) {
+    if (chenl == 0) {
+      fq0 = fq;
+      Serial.println("FQ0=" + String(fq0));
+    }
+    else if (chenl == 1) {
       fq1 = fq;
       Serial.println("FQ1=" + String(fq1));
-    }
-    else if (chenl == 2) {
-      fq2 = fq;
-      Serial.println("FQ2=" + String(fq2));
     }
   }
   else
@@ -204,7 +193,7 @@ void set_PID() {
 void get_temp() {
   String msg = "{";
   for (int i = 0; i < 4; i++) {
-    msg += "\"t" + String(i) + "\":\"" + String(chenls[i].Input) + "\"";
+    msg += "\"t" + String(i) + "\":\"" + String(temps[i]) + "\"";
     if (i < 3) {
       msg += ",";
     }
@@ -214,16 +203,7 @@ void get_temp() {
 }
 
 void get_fq() {
-  String msg = "{";
-  for (int i = 0; i < 2; i++) {
-    msg += "\"machine" + String(i) + "\"" + ": {";
-    msg += "\"fq1\" : \"" + String(fq1) + "\",\"" + "fq2\"" + ":" + "\"" + String(fq2) + "\"";
-    if (i < 1) 
-      msg += "}, ";
-    else
-      msg += "} ";
-  }
-  msg += "}";
+  String msg = "{\"fq0\":\""+String(fq0)+"\",\"fq1\":\""+String(fq1)+"\"}";
   server.send(200, "text/json", msg);
 }
 
