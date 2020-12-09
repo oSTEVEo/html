@@ -56,7 +56,7 @@ function get_PID() {
 
   var tmp = JSON.parse(value);
 
-  var a = Object.values(tmp)
+  var a = Object.values(tmp);
   for (var i = 0; i < 4; i++) {
     document.getElementById(`pid${i}_kp`).innerText = a[i].Kp;
     document.getElementById(`pid${i}_ki`).innerText = a[i].Ki;
@@ -64,7 +64,10 @@ function get_PID() {
   }
 }
 
-function set_temp(chen_num, value) {
+function set_temp() {
+  //chen_num, value
+  var chen_num = document.getElementById("temps_form").value;
+  var value = document.getElementById("set_temp").value;
   console.log("set temp");
   var request = "/set_temp?chenl=";
   request += chen_num;
@@ -78,7 +81,9 @@ function set_temp(chen_num, value) {
   console.log("Request is: " + request + "\nResult is: " + result);
 }
 
-function set_fq(chen_num, frequency) {
+function set_fq() {
+  var chen_num = document.getElementById("fq_form").value;
+  var frequency = document.getElementById("set_fq").value;
   console.log("set fq");
   var request = "/set_fq?chenl=";
   request += chen_num;
@@ -92,7 +97,22 @@ function set_fq(chen_num, frequency) {
   console.log("Request is: " + request + "\nResult is: " + result);
 }
 
-function set_PID(chenl, kp_, ki_, kd_) {
+function set_PID() {
+  var chenl = document.getElementById("temps_for_pid").value;
+  console.log(document.getElementById("temps_for_pid").value);
+  console.log(document.getElementById("pid_form"));
+  switch (document.getElementById("pid_form")) {
+    case 0:
+      var kp_ = document.getElementById("set_pid");
+      break;
+    case 1:
+      var ki_ = document.getElementById("set_pid");
+      break;
+    case 2:
+      var kd_ = document.getElementById("set_pid");
+      break;
+  }
+
   console.log("set fq");
   var request = "/set_fq?chenl=";
   request += chenl;
@@ -110,9 +130,9 @@ function set_PID(chenl, kp_, ki_, kd_) {
   console.log("Request is: " + request + "\nResult is: " + result);
 }
 
-setInterval(get_temp, 500);
-setInterval(get_fq, 500);
-setInterval(get_PID, 500);
+setInterval(get_temp, 1500);
+setInterval(get_fq, 1500);
+setInterval(get_PID, 1500);
 
 //get_temp();
 //get_fq();
@@ -121,3 +141,4 @@ setInterval(get_PID, 500);
 //set_temp(1, 2);
 //set_fq(1, 2);
 //set_PID(1, 2, 3, 4);
+//Сделай временные переменные для пида чтобы закидывать их в запрос getPID

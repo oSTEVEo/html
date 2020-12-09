@@ -20,13 +20,13 @@
 
         <div class="sets" name="set_temp">
             <select id="temps_form">
-            <option>1 Термодатчик</option>
-            <option>2 Термодатчик</option>
-            <option>3 Термодатчик</option>
-            <option>4 Термодатчик</option>
+            <option value = "0">1 Термодатчик</option>
+            <option value = "1">2 Термодатчик</option>
+            <option value = "2">3 Термодатчик</option>
+            <option value = "3">4 Термодатчик</option>
         </select>
             <input type="text" name="set temperature" id="set_temp" placeholder="Введите температуру">
-            <input type="button" value="Установить">
+            <button onclick="set_temp()">Установить</button>
         </div>
     </div>
 
@@ -38,8 +38,8 @@
 
         <div class="sets" name="set_fq">
             <select id="fq_form">
-            <option>0 Мотор</option>
-            <option>1 Мотор</option>
+            <option value = "0">0 Мотор</option>
+            <option value = "1">1 Мотор</option>
         </select>
             <input type="text" name="set fq" id="set_fq" placeholder="Введите частоту">
             <input type="button" value="Установить">
