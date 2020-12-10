@@ -6,8 +6,8 @@
 #include <ESP8266WebServer.h>
 
 //#include "site.h"
-const String data256 = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Document</title><style>body{background-color:#969696fd;padding:0px;margin:0px;width:100%;height:100%;padding:0px;margin:0px}#teemp{background-color:salmon;margin:10px}.monitor,.pid_monitor{margin:10px;font-size:2.33333rem;color:gray;text-shadow:2px 4px 3px rgba(0,0,0,0.2);font-family:'Oswald',sans-serif}.sets{font-size:2.33333rem;margin-left:20px}#temps,#fqs,#pids{align-self:top-center;padding:15px;padding-top:1px;width:auto;margin:20px;background-color:white;border-radius:20px}</style></head><body><div id=\"temps\"><div id=\"temp_monitor\"><div class=\"monitor\" id=\"temp0\">Температура 1: -0 C&#176;</div><div class=\"monitor\" id=\"temp1\">Температура 2: -0 C&#176;</div><div class=\"monitor\" id=\"temp2\">Температура 3: -0 C&#176;</div><div class=\"monitor\" id=\"temp3\">Температура 4: -0 C&#176;</div></div><div class=\"sets\" name=\"set_temp\"> <select id=\"temps_form\"><option>1 Термодатчик</option><option>2 Термодатчик</option><option>3 Термодатчик</option><option>4 Термодатчик</option> </select> <input type=\"text\" name=\"set temperature\" id=\"set_temp\" placeholder=\"Введите температуру\"> <input type=\"button\" value=\"Установить\"></div></div><div id=\"fqs\"><div id=\"fq_monitor\"><div class=\"monitor\" id=\"fq0\">Мотор 1: -0 HZ</div><div class=\"monitor\" id=\"fq1\">Мотор 2: -0 HZ</div></div><div class=\"sets\" name=\"set_fq\"> <select id=\"fq_form\"><option>1 Мотор</option><option>2 Мотор</option> </select> <input type=\"text\" name=\"set fq\" id=\"set_fq\" placeholder=\"Введите частоту\"> <input type=\"button\" value=\"Установить\"></div></div><div id=\"pids\"><table id=\"pid_monitor\" cellpadding=\"5px\"><tr><td></td><td>kp</td><td>ki</td><td>kd</td></tr><tr><td>Нагреватель 1</td><td id=\"pid0_kp\">-1</td><td id=\"pid0_ki\">-1</td><td id=\"pid0_kd\">-1</td></tr><tr><td>Нагреватель 2</td><td id=\"pid1_kp\">-1</td><td id=\"pid1_ki\">-1</td><td id=\"pid1_kd\">-1</td></tr><tr><td>Нагреватель 3</td><td id=\"pid2_kp\">-1</td><td id=\"pid2_ki\">-1</td><td id=\"pid2_kd\">-1</td></tr><tr><td>Нагреватель 4</td><td id=\"pid3_kp\">-1</td><td id=\"pid3_ki\">-1</td><td id=\"pid3_kd\">-1</td></tr></table><div class=\"sets\" name=\"set_pid\"> <select id=\"temps_for_pid\"><option>1 Нагреватель</option><option>2 Нагреватель</option><option>3 Нагреватель</option><option>4 Нагреватель</option> </select><select id=\"pid_form\"><option>kp</option><option>ki</option><option>kd</option> </select> <input type=\"text\" name=\"set pid\" id=\"set_pid\" placeholder=\"Введите значение\"> <input type=\"button\" value=\"Установить\"></div></div></div> <script>var DEBUG=false;var key=0;function httpGet(theUrl){var xmlHttp=new XMLHttpRequest();xmlHttp.open(\"GET\",theUrl,false);xmlHttp.send(null);if(xmlHttp.responseText==\"File Not Found\"){console.log(\"404 on server, error 404\");return\"{}\"}return xmlHttp.responseText}function get_temp(){var value;if(DEBUG){value='{\"t0\":\"0.00\",\"t1\":\"0.00\",\"t2\" :\"0.00\",\"t3\":\"0.00\"}'}else{value=httpGet(\"/get_temp\")}var tmp=JSON.parse(value);document.getElementById(\"temp0\").innerText=`Температура 1>${tmp.t0}C°`;document.getElementById(\"temp1\").innerText=`Температура 2>${tmp.t1}C°`;document.getElementById(\"temp2\").innerText=`Температура 3>${tmp.t2}C°`;document.getElementById(\"temp3\").innerText=`Температура 4>${tmp.t3}C°`}function get_fq(){if(DEBUG){value='{\"f0\":\"0\",\"f1\":\"0\"}'}else{value=httpGet(\"/get_fq\")}var tmp=JSON.parse(value);document.getElementById(\"fq0\").innerText=`Мотор 1>${tmp.fq0}Hz`;document.getElementById(\"fq1\").innerText=`Мотор 2>${tmp.fq1}Hz`;}function get_PID(){if(DEBUG){value='{\"PID0\":{\"Kp\":\"2.00\",\"Ki\":\"5.00\",\"Kd\":\"1.00\"},\"PID1\":{\"Kp\":\"2.00\",\"Ki\":\"3.00\",\"Kd\":\"4.00\"},\"PID2\":{\"Kp\":\"2.00\",\"Ki\":\"5.00\",\"Kd\":\"1.00\"},\"PID3\":{\"Kp\":\"2.00\",\"Ki\":\"5.00\",\"Kd\":\"1.00\"}}'}else{value=httpGet(\"/get_PID\")}var tmp=JSON.parse(value);var a=Object.values(tmp);for(var i=0;i<4;i+=1){document.getElementById(`pid${i}_kp`).innerText=a[i].Kp;document.getElementById(`pid${i}_ki`).innerText=a[i].Ki;document.getElementById(`pid${i}_kd`).innerText=a[i].Kd}}function set_temp(chen_num,value){console.log(\"set temp\");var request=\"/set_temp?chenl=\";request+=chen_num;request+=\"&temp=\";request+=value;request+=\"&key=\";request+=key;var result;var result=httpGet(request);console.log(\"Request is: \"+request+\"nResult is: \"+result)}function set_fq(chen_num,frequency){console.log(\"set fq\");var request=\"/set_fq?chenl=\";request+=chen_num;request+=\"&frequency=\";request+=frequency;request+=\"&key=\";request+=key;var result;var result=httpGet(request);console.log(\"Request is: \"+request+\"nResult is: \"+result)}function set_PID(chenl,kp_,ki_,kd_){console.log(\"set fq\");var request=\"/set_fq?chenl=\";request+=chenl;request+=\"&kp=\";request+=kp_;request+=\"&ki=\";request+=ki_;request+=\"&kd=\";request+=kd_;request+=\"&key=\";request+=key;var result;var result=httpGet(request);console.log(\"Request is: \"+request+\"nResult is: \"+result)}setInterval(get_temp,500);setInterval(get_fq,500);setInterval(get_PID,500);</script> </body></html>";
-
+const String data256 = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Document</title><style>body{background-color:#969696fd;padding:0px;margin:0px;width:100%;height:100%;padding:0px;margin:0px}#teemp{background-color:salmon;margin:10px}.monitor,.pid_monitor{margin:10px;font-size:2.33333rem;color:gray;text-shadow:2px 4px 3px rgba(0,0,0,0.2);font-family:'Oswald',sans-serif}.sets{font-size:2.33333rem;margin-left:20px}#temps,#fqs,#pids{align-self:top-center;padding:15px;padding-top:1px;width:auto;margin:20px;background-color:white;border-radius:20px}</style></head><body><div id=\"temps\"><div id=\"temp_monitor\"><div class=\"monitor\" id=\"temp0\">Температура 0: -0 C&#176;</div><div class=\"monitor\" id=\"temp1\">Температура 1: -0 C&#176;</div><div class=\"monitor\" id=\"temp2\">Температура 2: -0 C&#176;</div><div class=\"monitor\" id=\"temp3\">Температура 3: -0 C&#176;</div></div><div class=\"sets\" name=\"set_temp\"> <select id=\"temps_form\"><option value=\"0\">0 Термодатчик</option><option value=\"1\">1 Термодатчик</option><option value=\"2\">2 Термодатчик</option><option value=\"3\">3 Термодатчик</option> </select> <input type=\"text\" name=\"set temperature\" id=\"set_temp\" placeholder=\"Введите температуру\"> <button onclick=\"set_temp()\">Установить</button></div></div><div id=\"fqs\"><div id=\"fq_monitor\"><div class=\"monitor\" id=\"fq0\">Мотор 0: -0 HZ</div><div class=\"monitor\" id=\"fq1\">Мотор 1: -0 HZ</div></div><div class=\"sets\" name=\"set_fq\"> <select id=\"fq_form\"><option value = \"0\">0 Мотор</option><option value = \"1\">1 Мотор</option> </select> <input type=\"text\" name=\"set fq\" id=\"set_fq\" placeholder=\"Введите частоту\"> <button onclick=\"set_fq()\">Установить</button></div></div><div id=\"pids\"><table id=\"pid_monitor\" cellpadding=\"5px\"><tr><td></td><td>kp</td><td>ki</td><td>kd</td></tr><tr><td>Нагреватель 0</td><td id=\"pid0_kp\">-1</td><td id=\"pid0_ki\">-1</td><td id=\"pid0_kd\">-1</td></tr><tr><td>Нагреватель 1</td><td id=\"pid1_kp\">-1</td><td id=\"pid1_ki\">-1</td><td id=\"pid1_kd\">-1</td></tr><tr><td>Нагреватель 2</td><td id=\"pid2_kp\">-1</td><td id=\"pid2_ki\">-1</td><td id=\"pid2_kd\">-1</td></tr><tr><td>Нагреватель 3</td><td id=\"pid3_kp\">-1</td><td id=\"pid3_ki\">-1</td><td id=\"pid3_kd\">-1</td></tr></table><div class=\"sets\" name=\"set_pid\"> <select id=\"temps_for_pid\"><option value = \"0\">0 Нагреватель</option><option value = \"1\">1 Нагреватель</option><option value = \"2\">2 Нагреватель</option><option value = \"3\">3 Нагреватель</option> </select><select id=\"pid_form\"><option value = \"0\">kp</option><option value = \"1\">ki</option><option value = \"2\">kd</option> </select> <input type=\"text\" name=\"set pid\" id=\"set_pid\" placeholder=\"Введите значение\"> <button onclick=\"set_PID()\">Установить</button></div></div></div> <script>var DEBUG=false;var key=0;function httpGet(theUrl,callback){console.log(theUrl);var xhr=new XMLHttpRequest();xhr.open(\"GET\",theUrl,true);xhr.onreadystatechange=function(){if(xhr.readyState==4&&xhr.status==200){callback(xhr.responseText)}};xhr.send(null)}function get_temp(){var value;httpGet(\"/get_temp\",function(value){console.log(value);var tmp=JSON.parse(value);document.getElementById(\"temp0\").innerText=`Температура 1>${tmp.t0}C°`;document.getElementById(\"temp1\").innerText=`Температура 2>${tmp.t1}C°`;document.getElementById(\"temp2\").innerText=`Температура 3>${tmp.t2}C°`;document.getElementById(\"temp3\").innerText=`Температура 4>${tmp.t3}C°`})}function get_fq(){if(DEBUG){value='{\"f0\":\"0\",\"f1\":\"0\"}'}else{value=httpGet(\"/get_fq\",function(value){console.log(value);var tmp=JSON.parse(value);document.getElementById(\"fq0\").innerText=`Мотор 1>${tmp.fq0}Hz`;document.getElementById(\"fq1\").innerText=`Мотор 2>${tmp.fq1}Hz`});}}function get_PID(){httpGet(\"/get_PID\",function(value){console.log(value);var tmp=JSON.parse(value);var a=Object.values(tmp);for(var i=0;i<4;i+=1){document.getElementById(`pid${i}_kp`).innerText=a[i].Kp;document.getElementById(`pid${i}_ki`).innerText=a[i].Ki;document.getElementById(`pid${i}_kd`).innerText=a[i].Kd}})}function set_temp(){var chen_num=document.getElementById(\"temps_form\").value;var value=document.getElementById(\"set_temp\").value;console.log(\"set temp\");var request=\"/set_temp?chenl=\";request+=chen_num;request+=\"&temp=\";request+=value;request+=\"&key=\";request+=key;httpGet(request,function(text){console.log(\"set_temp reqest-\"+text)})}function set_fq(){var chen_num=document.getElementById(\"fq_form\").value;var frequency=document.getElementById(\"set_fq\").value;console.log(\"set fq\");var request=\"/set_fq?chenl=\";request+=chen_num;request+=\"&frequency=\";request+=frequency;request+=\"&key=\";request+=key;httpGet(request,function(text){console.log(\"set_fq reqest -\"+text)})}function set_PID(){var chenl=document.getElementById(\"temps_for_pid\").value;console.log(\"set PID\");var request=\"/set_PID?chenl=\";request+=chenl;request+=\"&kn=\";request+=document.getElementById(\"pid_form\").value;request+=\"&value=\";request+=document.getElementById(\"set_pid\").value;request+=\"&key=\";request+=key;httpGet(request,function(text){console.log(\"set_pid reqest -\"+text)})}setInterval(function(){get_temp();get_fq();get_PID()},1500);</script> </body></html>";
+//setInterval(function(){get_temp();get_fq();get_PID()},1500);
 #ifndef APSSID
 #define APSSID "ESPap1"
 #define APPSK  "qweqweqweasd"
@@ -27,7 +27,7 @@ const char *password = APPSK;
 int fq0 = 0;
 int fq1 = 0;
 
-int temps[4] = {20, 20, 20, 20};
+double temps[4] = {20, 20, 20, 20};
 
 ESP8266WebServer server(80);
 
@@ -45,7 +45,7 @@ double Kp[4] = {2, 2, 2, 2}, Ki[4] = {5, 5, 5, 5}, Kd[4] = {1, 1, 1, 1};
 PID myPID1(&Input, &Output, &Setpoint, Kp[0], Ki[0], Kd[0], DIRECT);
 PID myPID2(&Input, &Output, &Setpoint, Kp[1], Ki[1], Kd[1], DIRECT);
 PID myPID3(&Input, &Output, &Setpoint, Kp[2], Ki[2], Kd[2], DIRECT);
-PID myPID4(&Input, &Output, &Setpoint, Kp[3], Ki[3], Kd[3], DIRECT);
+PID myPID4(&Input, &Output, &Setpoint, Kp[3], Ki[3], Kd[3], DIRECT); //switchkeys
 
 int WindowSize = 5000;
 unsigned long windowStartTime;
@@ -54,7 +54,7 @@ unsigned long windowStartTime;
 void handleRoot() {
   server.send(200, "text/html", data256);
   //for(int i = 0; i < sizeof(data256)/sizeof(char); i++){
-  // server.write((char)pgm_read_byte(&data256[i])); 
+  // server.write((char)pgm_read_byte(&data256[i]));
   //}
   //server.end();
 }
@@ -79,7 +79,7 @@ bool isKeyValid(String key) {
 }
 
 void set_temp() {
-  float temp;
+  double temp;
   int chenl;
   String key;
 
@@ -91,7 +91,7 @@ void set_temp() {
       cs += 1;
     }
     else if (server.argName(i) == "temp") {
-      temp = server.arg(i).toInt(); //TEMP!!!
+      temp = server.arg(i).toDouble(); //TEMP!!!
       cs += 2;
     }
     else if (server.argName(i) == "key") {
@@ -102,8 +102,8 @@ void set_temp() {
 
   if ((cs == 7) && isKeyValid(key)) {
     server.send(200, "text/plain", "ok");
-    if ((chenl <= 4) && (chenl > 0)) {
-      temps[chenl - 1] = temp;
+    if ((chenl < 4) && (chenl >= 0)) { //temps[],
+      temps[chenl] = temp;
       Serial.println("TEMP" + String(chenl) + " = " + String(temp));
     }
   }
@@ -131,7 +131,7 @@ void set_fq() {
       cs += 4;
     }
   }
-
+  Serial.println(String(cs) + " " + String(fq));
   if ((cs == 7) && isKeyValid(key)) {
     server.send(200, "text/plain", "ok");
     if (chenl == 0) {
@@ -148,43 +148,49 @@ void set_fq() {
 }
 
 void set_PID() {
-  double kp_;
-  double ki_;
-  double kd_;
+  int kn;
+  double value;
   int chenl;
   String key;
 
+  //chenl, kn=[0..2] => [kp,ki,kd],value
   int cs = 0;
   for (uint8_t i = 0; i < server.args(); i++) {
-
     if (server.argName(i) == "chenl") {
       chenl = server.arg(i).toInt();
-      cs += 1;
+      if ((chenl >= 0) && (chenl <= 3))
+        cs += 1;
     }
-    else if (server.argName(i) == "kp") {
-      kp_ = server.arg(i).toInt();
-      cs += 2;
+    else if (server.argName(i) == "kn") {
+      kn = server.arg(i).toInt();
+      if ((kn >= 0) && (kn <= 2))
+        cs += 2;
     }
-    else if (server.argName(i) == "ki") {
-      ki_ = server.arg(i).toInt();
+    else if (server.argName(i) == "value") {
+      value = server.arg(i).toDouble();
       cs += 4;
-    }
-    else if (server.argName(i) == "kd") {
-      kd_ = server.arg(i).toInt();
-      cs += 8;
     }
     else if (server.argName(i) == "key") {
       key = server.arg(i);
-      cs += 16;
+      cs += 8;
     }
   }
 
-  if ((cs == 31) && isKeyValid(key)) {
+  if ((cs == 15) && isKeyValid(key)) {
     server.send(200, "text/plain", "ok");
-      Kp[chenl] = kp_;
-      Ki[chenl] = ki_;
-      Kd[chenl] = kd_;
-      Serial.println("PID touch");
+    switch (kn) {
+      case 0:
+        Kp[chenl] = value;
+        break;
+      case 1:
+        Ki[chenl] = value;
+        break;
+      case 2:
+        Kd[chenl] = value;
+        break;
+
+    }
+    Serial.println("PID touch");
   }
   else
     server.send(400, "text/plain", "Bad Request");
@@ -203,17 +209,17 @@ void get_temp() {
 }
 
 void get_fq() {
-  String msg = "{\"fq0\":\""+String(fq0)+"\",\"fq1\":\""+String(fq1)+"\"}";
+  String msg = "{\"fq0\":\"" + String(fq0) + "\",\"fq1\":\"" + String(fq1) + "\"}";
   server.send(200, "text/json", msg);
 }
 
-void get_PID(){
+void get_PID() {
   String msg = "{";
-  for (int i = 0; i < 4; i++){
+  for (int i = 0; i < 4; i++) {
     msg += "\"PID" + String(i) + "\":{";
     msg += "\"Kp\":\"" + String(Kp[i]) + "\"," + "\"Ki\":\"" + String(Ki[i]) + "\",\"Kd\":\"" + String(Kd[i]);
-    if(i < 3)
-      msg += "\"},";  
+    if (i < 3)
+      msg += "\"},";
     else
       msg += "\"}";
   }
@@ -273,7 +279,7 @@ void loop() {
     timer1 = millis();
 
     Input = thermocouple.readCelsius();
-    Serial.println(Input);
+    //Serial.println(Input);
 
   }
   myPID1.Compute();

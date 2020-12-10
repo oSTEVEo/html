@@ -12,19 +12,19 @@
 <body>
     <div id="temps">
         <div id="temp_monitor">
-            <div class="monitor" id="temp0">Температура 1: -0 C&#176;</div>
-            <div class="monitor" id="temp1">Температура 2: -0 C&#176;</div>
-            <div class="monitor" id="temp2">Температура 3: -0 C&#176;</div>
-            <div class="monitor" id="temp3">Температура 4: -0 C&#176;</div>
+            <div class="monitor" id="temp0">Температура 0: -0 C&#176;</div>
+            <div class="monitor" id="temp1">Температура 1: -0 C&#176;</div>
+            <div class="monitor" id="temp2">Температура 2: -0 C&#176;</div>
+            <div class="monitor" id="temp3">Температура 3: -0 C&#176;</div>
         </div>
 
         <div class="sets" name="set_temp">
             <select id="temps_form">
-            <option value = "0">1 Термодатчик</option>
-            <option value = "1">2 Термодатчик</option>
-            <option value = "2">3 Термодатчик</option>
-            <option value = "3">4 Термодатчик</option>
-        </select>
+                <option value="0">0 Термодатчик</option>
+                <option value="1">1 Термодатчик</option>
+                <option value="2">2 Термодатчик</option>
+                <option value="3">3 Термодатчик</option>
+            </select>
             <input type="text" name="set temperature" id="set_temp" placeholder="Введите температуру">
             <button onclick="set_temp()">Установить</button>
         </div>
@@ -32,17 +32,17 @@
 
     <div id="fqs">
         <div id="fq_monitor">
-            <div class="monitor" id="fq0">Мотор 1: -0 HZ</div>
-            <div class="monitor" id="fq1">Мотор 2: -0 HZ</div>
+            <div class="monitor" id="fq0">Мотор 0: -0 HZ</div>
+            <div class="monitor" id="fq1">Мотор 1: -0 HZ</div>
         </div>
 
         <div class="sets" name="set_fq">
             <select id="fq_form">
-            <option value = "0">0 Мотор</option>
-            <option value = "1">1 Мотор</option>
-        </select>
+                <option value="0">0 Мотор</option>
+                <option value="1">1 Мотор</option>
+            </select>
             <input type="text" name="set fq" id="set_fq" placeholder="Введите частоту">
-            <input type="button" value="Установить">
+            <button onclick="set_fq()">Установить</button>
         </div>
     </div>
 
@@ -56,28 +56,28 @@
             </tr>
 
             <tr>
-                <td>Нагреватель 1</td>
+                <td>Нагреватель 0</td>
                 <td id="pid0_kp">-1</td>
                 <td id="pid0_ki">-1</td>
                 <td id="pid0_kd">-1</td>
             </tr>
 
             <tr>
-                <td>Нагреватель 2</td>
+                <td>Нагреватель 1</td>
                 <td id="pid1_kp">-1</td>
                 <td id="pid1_ki">-1</td>
                 <td id="pid1_kd">-1</td>
             </tr>
 
             <tr>
-                <td>Нагреватель 3</td>
+                <td>Нагреватель 2</td>
                 <td id="pid2_kp">-1</td>
                 <td id="pid2_ki">-1</td>
                 <td id="pid2_kd">-1</td>
             </tr>
 
             <tr>
-                <td>Нагреватель 4</td>
+                <td>Нагреватель 3</td>
                 <td id="pid3_kp">-1</td>
                 <td id="pid3_ki">-1</td>
                 <td id="pid3_kd">-1</td>
@@ -88,23 +88,22 @@
 
         <div class="sets" name="set_pid">
             <select id="temps_for_pid">
-            <option>1 Нагреватель</option>
-            <option>2 Нагреватель</option>
-            <option>3 Нагреватель</option>
-            <option>4 Нагреватель</option>
-        </select>
+                <option value="0">0 Нагреватель</option>
+                <option value="1">1 Нагреватель</option>
+                <option value="2">2 Нагреватель</option>
+                <option value="3">3 Нагреватель</option>
+            </select>
 
             <select id="pid_form">
-            <option>kp</option>
-            <option>ki</option>
-            <option>kd</option>
-        </select>
+                <option value="0">kp</option>
+                <option value="1">ki</option>
+                <option value="2">kd</option>
+            </select>
             <input type="text" name="set pid" id="set_pid" placeholder="Введите значение">
-            <input type="button" value="Установить">
+            <button onclick="set_PID()">Установить</button>
         </div>
     </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 

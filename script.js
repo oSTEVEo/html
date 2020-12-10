@@ -2,42 +2,46 @@ var DEBUG = false;
 
 var key = 0;
 
-function httpGet(theUrl) {
-  var xmlHttp = new XMLHttpRequest();
-  xmlHttp.open("GET", theUrl, false); // false for synchronous request
-  xmlHttp.send(null);
-  if (xmlHttp.responseText == "File Not Found") {
-    console.log("404 on server, error 404");
-    return "{}";
-  }
+function httpGet(theUrl, callback) {
+  console.log(theUrl);
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", theUrl, true);
 
-  return xmlHttp.responseText;
+  xhr.onreadystatechange = function () {
+    //Call a function when the state changes.
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      callback(xhr.responseText);
+    }
+  };
+  xhr.send(null);
 }
 
 function get_temp() {
   //console.log("get temp");
   var value;
 
-  if (DEBUG) value = '{"t0":"0.00","t1":"0.00","t2" :"0.00","t3":"0.00"}';
-  else value = httpGet("/get_temp");
+  httpGet("/get_temp", function (value) {
+    console.log(value);
+    var tmp = JSON.parse(value);
 
-  var tmp = JSON.parse(value);
-
-  document.getElementById("temp0").innerText = `Температура 1 > ${tmp.t0} C°`;
-  document.getElementById("temp1").innerText = `Температура 2 > ${tmp.t1} C°`;
-  document.getElementById("temp2").innerText = `Температура 3 > ${tmp.t2} C°`;
-  document.getElementById("temp3").innerText = `Температура 4 > ${tmp.t3} C°`;
+    document.getElementById("temp0").innerText = `Температура 1 > ${tmp.t0} C°`;
+    document.getElementById("temp1").innerText = `Температура 2 > ${tmp.t1} C°`;
+    document.getElementById("temp2").innerText = `Температура 3 > ${tmp.t2} C°`;
+    document.getElementById("temp3").innerText = `Температура 4 > ${tmp.t3} C°`;
+  });
 }
 
 function get_fq() {
   //console.log("get fq");
   if (DEBUG) value = '{"f0":"0","f1":"0"}';
-  else value = httpGet("/get_fq");
+  else
+    value = httpGet("/get_fq", function (value) {
+      console.log(value);
+      var tmp = JSON.parse(value);
 
-  var tmp = JSON.parse(value);
-
-  document.getElementById("fq0").innerText = `Мотор 1 > ${tmp.fq0} Hz`;
-  document.getElementById("fq1").innerText = `Мотор 2 > ${tmp.fq1} Hz`;
+      document.getElementById("fq0").innerText = `Мотор 1 > ${tmp.fq0} Hz`;
+      document.getElementById("fq1").innerText = `Мотор 2 > ${tmp.fq1} Hz`;
+    });
 
   //console.log(value);
 }
@@ -49,19 +53,18 @@ function get_PID() {
     <td id="pid0_ki">-1</td>
     <td id="pid0_kd">-1</td>
     */
-  if (DEBUG)
-    value =
-      '{"PID0":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID1":{"Kp":"2.00","Ki":"3.00","Kd":"4.00"},"PID2":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"},"PID3":{"Kp":"2.00","Ki":"5.00","Kd":"1.00"}}';
-  else value = httpGet("/get_PID");
+  httpGet("/get_PID", function (value) {
+    console.log(value);
 
-  var tmp = JSON.parse(value);
+    var tmp = JSON.parse(value);
 
-  var a = Object.values(tmp);
-  for (var i = 0; i < 4; i++) {
-    document.getElementById(`pid${i}_kp`).innerText = a[i].Kp;
-    document.getElementById(`pid${i}_ki`).innerText = a[i].Ki;
-    document.getElementById(`pid${i}_kd`).innerText = a[i].Kd;
-  }
+    var a = Object.values(tmp);
+    for (var i = 0; i < 4; i++) {
+      document.getElementById(`pid${i}_kp`).innerText = a[i].Kp;
+      document.getElementById(`pid${i}_ki`).innerText = a[i].Ki;
+      document.getElementById(`pid${i}_kd`).innerText = a[i].Kd;
+    }
+  });
 }
 
 function set_temp() {
@@ -76,9 +79,9 @@ function set_temp() {
   request += "&key=";
   request += key;
 
-  var result;
-  var result = httpGet(request);
-  console.log("Request is: " + request + "\nResult is: " + result);
+  httpGet(request, function (text) {
+    console.log("set_temp reqest-" + text);
+  });
 }
 
 function set_fq() {
@@ -92,47 +95,36 @@ function set_fq() {
   request += "&key=";
   request += key;
 
-  var result;
-  var result = httpGet(request);
-  console.log("Request is: " + request + "\nResult is: " + result);
+  httpGet(request, function (text) {
+    console.log("set_fq reqest -" + text);
+  });
 }
 
 function set_PID() {
   var chenl = document.getElementById("temps_for_pid").value;
-  console.log(document.getElementById("temps_for_pid").value);
-  console.log(document.getElementById("pid_form"));
-  switch (document.getElementById("pid_form")) {
-    case 0:
-      var kp_ = document.getElementById("set_pid");
-      break;
-    case 1:
-      var ki_ = document.getElementById("set_pid");
-      break;
-    case 2:
-      var kd_ = document.getElementById("set_pid");
-      break;
-  }
 
-  console.log("set fq");
-  var request = "/set_fq?chenl=";
+  console.log("set PID");
+  var request = "/set_PID?chenl=";
   request += chenl;
-  request += "&kp=";
-  request += kp_;
-  request += "&ki=";
-  request += ki_;
-  request += "&kd=";
-  request += kd_;
+  request += "&kn=";
+  request += document.getElementById("pid_form").value;
+  request += "&value=";
+  request += document.getElementById("set_pid").value;
   request += "&key=";
   request += key;
 
-  var result;
-  var result = httpGet(request);
-  console.log("Request is: " + request + "\nResult is: " + result);
+  httpGet(request, function (text) {
+    console.log("set_pid reqest -" + text);
+  });
 }
 
-setInterval(get_temp, 1500);
-setInterval(get_fq, 1500);
-setInterval(get_PID, 1500);
+setInterval(function () {
+  get_temp();
+  get_fq();
+  get_PID();
+}, 1500);
+//setInterval(get_fq, 1500);
+//setInterval(get_PID, 1500);
 
 //get_temp();
 //get_fq();
