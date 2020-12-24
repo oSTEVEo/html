@@ -24,10 +24,10 @@ function get_temp() {
     console.log(value);
     var tmp = JSON.parse(value);
 
-    document.getElementById("temp0").innerText = `Температура 1 > ${tmp.t0} C°`;
-    document.getElementById("temp1").innerText = `Температура 2 > ${tmp.t1} C°`;
-    document.getElementById("temp2").innerText = `Температура 3 > ${tmp.t2} C°`;
-    document.getElementById("temp3").innerText = `Температура 4 > ${tmp.t3} C°`;
+    document.getElementById("temp0").innerText = `0 >\ ${tmp.t0.set+"/"+tmp.t0.current} C°`;
+    document.getElementById("temp1").innerText = `1 >\ ${tmp.t1.set+"/"+tmp.t1.current} C°`;
+    document.getElementById("temp2").innerText = `2 >\ ${tmp.t2.set+"/"+tmp.t2.current} C°`;
+    document.getElementById("temp3").innerText = `3 >\ ${tmp.t3.set+"/"+tmp.t3.current} C°`;
   });
 }
 
@@ -39,8 +39,8 @@ function get_fq() {
       console.log(value);
       var tmp = JSON.parse(value);
 
-      document.getElementById("fq0").innerText = `Мотор 1 > ${tmp.fq0} Hz`;
-      document.getElementById("fq1").innerText = `Мотор 2 > ${tmp.fq1} Hz`;
+      document.getElementById("fq0").innerText = `Мотор 0 > ${tmp.fq0} Hz`;
+      document.getElementById("fq1").innerText = `Мотор 1 > ${tmp.fq1} Hz`;
     });
 
   //console.log(value);
