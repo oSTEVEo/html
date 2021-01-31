@@ -118,11 +118,31 @@ function set_PID() {
   });
 }
 
+function set_WiFi() {
+  var name = document.getElementById("set_wifi_name").value;
+  var pass = document.getElementById("set_wifi_pass").value;
+
+  console.log("set WiFi");
+  var request = "/set_WiFi?name=";
+  request += name;
+  request += "&password=";
+  request += pass;
+  request += "&key=";
+  request += key;
+
+  httpGet(request, function (text) {
+    console.log("set_WiFi reqest -" + text);
+  });
+}
+
 setInterval(function () {
   get_temp();
   get_fq();
   get_PID();
 }, 1500);
+
+
+
 //setInterval(get_fq, 1500);
 //setInterval(get_PID, 1500);
 

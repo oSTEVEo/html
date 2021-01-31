@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "8e338e1e-e662-41ba-97f4-9caf63c7a760",
+		"name": "ESP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "192.168.4.1/get_fq",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/get_fq",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						"get_fq"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "192.168.4.1/get_temp",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/get_PID",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						"get_PID"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "192.168.4.1/set_fq",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/set_temp?chenl=1&temp=25&key=0",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						"set_temp"
+					],
+					"query": [
+						{
+							"key": "chenl",
+							"value": "1"
+						},
+						{
+							"key": "temp",
+							"value": "25"
+						},
+						{
+							"key": "key",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "192.168.4.1/set_temp",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/set_temp?chenl=1&temp=25&key=0",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						"set_temp"
+					],
+					"query": [
+						{
+							"key": "chenl",
+							"value": "1"
+						},
+						{
+							"key": "temp",
+							"value": "25"
+						},
+						{
+							"key": "key",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "192.168.4.1/get_PID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "192.168.4.1/set_PID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/send_PID?chenl",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						"send_PID"
+					],
+					"query": [
+						{
+							"key": "chenl",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "192.168.4.1/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "192.168.4.1/",
+					"host": [
+						"192",
+						"168",
+						"4",
+						"1"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
