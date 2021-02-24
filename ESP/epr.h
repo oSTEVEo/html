@@ -18,8 +18,6 @@ void readSetting() {
 
 //=======================
 
-
-
 void write_string_EEPROM (int Addr, String Str) {
 
   Serial.println();

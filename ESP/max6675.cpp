@@ -6,38 +6,49 @@
 #include <stdlib.h>
 #include "max6675.h"
 
+#define TERMOPIN_1 0
+#define TERMOPIN_2 0
+#define TERMOPIN_3 0
+
 MAX6675::MAX6675(int8_t SCLK, int8_t CS, int8_t MISO) {
   sclk = SCLK;
   cs = CS;
   miso = MISO;
 
-  pinMode(cs, OUTPUT);
+  pinMode(TERMOPIN_1, OUTPUT);
+  pinMode(TERMOPIN_2, OUTPUT);
+  pinMode(TERMOPIN_2, OUTPUT);
   pinMode(sclk, OUTPUT); 
   pinMode(miso, INPUT);
 
-  digitalWrite(cs, HIGH);
+  digitalWrite(TERMOPIN_1, LOW);
+  digitalWrite(TERMOPIN_2, LOW);
+  digitalWrite(TERMOPIN_3, LOW);
 }
-double MAX6675::readCelsius(void) {
 
+double MAX6675::readCelsius(void) {
   uint16_t v;
 
-  digitalWrite(cs, LOW);
-  delay(1);
+  digitalWrite(TERMOPIN_1, LOW);
+  digitalWrite(TERMOPIN_2, LOW);
+  digitalWrite(TERMOPIN_3, LOW);
+  
+  delay(10);
 
   v = spiread();
   v <<= 8;
   v |= spiread();
 
-  digitalWrite(cs, HIGH);
+  digitalWrite(TERMOPIN_1, cs&0b1==0?0:1);
+  digitalWrite(TERMOPIN_2, cs&0b10==0?0:1);
+  digitalWrite(TERMOPIN_3, cs&0b100==0?0:1);
 
   if (v & 0x4) {
     // uh oh, no thermocouple attached!
     return NAN; 
     //return -100;
   }
-
   v >>= 3;
-
   return v*0.25;
 }
 

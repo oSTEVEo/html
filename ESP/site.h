@@ -185,11 +185,13 @@ void set_WiFi() {
 }
 
 void get_temp() {
+  /*
   data.d.currentTemps[0] = random(0, 10);
   data.d.currentTemps[1] = random(0, 10);
   data.d.currentTemps[2] = random(0, 10);
   data.d.currentTemps[3] = random(0, 10);
-
+  */
+  
   String msg = "{";
   for (int i = 0; i < 4; i++) {
     msg += "\"t" + String(i) + "\":{\"set\":\"" + String(data.d.temps[i]) + "\",\"current\":\"" + String(data.d.currentTemps[i]) + "\"}";

@@ -12,6 +12,16 @@
 #define initByteADRES 0
 #define STRING_MAXLENGTH 20
 
+#define TERMOPIN_1 0
+#define TERMOPIN_2 0
+#define TERMOPIN_3 0
+#define TERMODO 0
+#define TERMOCS_1 0
+#define TERMOCS_2 0
+#define TERMOCS_3 13
+#define TERMOCS_4 12
+#define TERMOCLK 14
+
 String APSSID = "MyWiFi";
 String APPSK = "qweqweqweasd";
 
@@ -47,6 +57,11 @@ PID myPID3(&data.d.currentTemps[2], &data.d.Output[2], &data.d.temps[2], data.d.
 PID myPID4(&data.d.currentTemps[3], &data.d.Output[3], &data.d.temps[3], data.d.Kp[3], data.d.Ki[3], data.d.Kd[3], DIRECT); //switchkeys
 
 int WindowSize = 5000;
+
+MAX6675 thermocouple1(TERMOCLK, TERMOCS_1, TERMODO);
+MAX6675 thermocouple2(TERMOCLK, TERMOCS_2, TERMODO);
+MAX6675 thermocouple3(TERMOCLK, TERMOCS_3, TERMODO);
+MAX6675 thermocouple4(TERMOCLK, TERMOCS_4, TERMODO);
 
 void setup() {
   EEPROM.begin(512);
@@ -86,7 +101,6 @@ void setup() {
     writeWiFiSetting();
     WiFi.mode(WIFI_AP_STA);
     WiFi.softAP(ssid, password);
-
   }
 
   Serial.println();
@@ -144,9 +158,15 @@ void loop() {
 
   if (timer1 + 1000 < millis()) {
     timer1 = millis();
+    data.d.currentTemps[0] = thermocouple1.readCelsius();
+    data.d.currentTemps[1] = thermocouple2.readCelsius();
+    data.d.currentTemps[2] = thermocouple3.readCelsius();
+    data.d.currentTemps[3] = thermocouple4.readCelsius();
   }
   myPID1.Compute();
   myPID2.Compute();
   myPID3.Compute();
   myPID4.Compute();
+
+  
 }
